@@ -6,14 +6,18 @@ pub fn unix_nanoseconds_to_nanoseconds(unix_nanoseconds: Int) -> Int {
 }
 
 pub fn unix_nanoseconds_to_microseconds(unix_nanoseconds: Int) -> Int {
-  unix_nanoseconds / 1000
+  unix_nanoseconds % 1000
 }
 
 /// Converts unix seconds to milliseconds
 pub fn unix_seconds_to_milliseconds(unix_seconds: types.Number) -> Int {
   case unix_seconds {
-    types.Int(i) -> { i / 1000 } % 1000
-    types.Float(f) -> { float.round(f) / 1000 } % 1000
+    types.Int(_) -> 0
+    types.Float(f) -> {
+      let whole = float.floor(f)
+      let frac = f -. whole
+      float.round(frac *. 1000.0)
+    }
   }
 }
 
